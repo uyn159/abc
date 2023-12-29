@@ -13,7 +13,7 @@ build:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
   script:
     - docker pull $IMAGE_TAG_BUILDER || true
-    - docker build --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG_BUILDER --target=builder .
+    - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG_BUILDER --target=builder .
     - docker build -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
     - docker push $IMAGE_TAG_BUILDER
