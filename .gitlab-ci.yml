@@ -13,13 +13,14 @@ build:
   cache:
     - key: next-cache
       paths:
-        - .ci/next/cache
+        - .next/cache
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-    - mkdir -p .ci/next/cache
+    - mkdir -p .next/cache
   script:
     - docker pull $IMAGE_TAG_BUILDER || true
     - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG_BUILDER --target=builder .
     - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
     - docker push $IMAGE_TAG_BUILDER
+    - docker run --rm -iv${PWD}/.next:/host-volume $IMAGE_TAG_BUILDER sh -s "cp -r .next/cache /host-volume"

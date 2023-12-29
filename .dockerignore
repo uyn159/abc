@@ -53,4 +53,4 @@ dist
 *.md
 
 .next
-.ci
+!.next/cache
