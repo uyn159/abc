@@ -4,7 +4,6 @@ import ProductsFeatured from '../components/products-featured';
 import Footer from '../components/footer';
 import Subscribe from '../components/subscribe';
 
-
 const IndexPage = () => {
   return (
     <Layout>
