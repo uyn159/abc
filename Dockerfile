@@ -2,12 +2,13 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
-RUN yarn install --pure-lockfile
+RUN --mount=type=bind,source=package.json,target=package.json \
+    --mount=type=bind,source=yarn.lock,target=yarn.lock \
+    yarn install --pure-lockfile
 
 COPY . .
-RUN yarn build
-RUN yarn install --pure-lockfile --prod
+RUN --mount=type=bind,source=.ci/next/.cache,target=./.next/cache \
+    yarn build && yarn install --pure-lockfile --prod
 
 FROM node:18-alpine
 
