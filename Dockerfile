@@ -7,7 +7,7 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     yarn install --pure-lockfile
 
 COPY . .
-RUN --mount=type=bind,source=.ci/next/.cache,target=./.next/cache \
+RUN --mount=type=bind,source=.ci/next/cache,target=./.next/cache \
     yarn build && yarn install --pure-lockfile --prod
 
 FROM node:18-alpine
