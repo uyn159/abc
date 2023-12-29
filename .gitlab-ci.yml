@@ -4,6 +4,7 @@ stages:
   - build
 
 variables:
+  IMAGE_TAG_LATEST: $CI_REGISTRY_IMAGE:latest
   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
 build:
@@ -11,5 +12,7 @@ build:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
   script:
-    - docker build -t $IMAGE_TAG .
+    - docker pull $IMAGE_TAG_LATEST || true
+    - docker build --cache-from $IMAGE_TAG_LATEST -t $IMAGE_TAG -t $IMAGE_TAG_LATEST .
     - docker push $IMAGE_TAG
+    - docker push $IMAGE_TAG_LATEST
