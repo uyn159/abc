@@ -18,9 +18,11 @@ build:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
     - mkdir -p .next/cache
   script:
+    - ls -la .next/cache
     - docker pull $IMAGE_TAG_BUILDER || true
-    - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG_BUILDER --target=builder .
-    - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG .
+    - docker buildx build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG_BUILDER --target=builder .
+    - docker buildx build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
     - docker push $IMAGE_TAG_BUILDER
     - docker run --rm -iv${PWD}/.next:/host-volume $IMAGE_TAG_BUILDER sh -s "cp -r .next/cache /host-volume"
+    - ls -la .next/cache
