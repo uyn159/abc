@@ -2,9 +2,8 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=yarn.lock,target=yarn.lock \
-    yarn install --pure-lockfile
+COPY package.json yarn.lock ./
+RUN yarn install --pure-lockfile
 
 COPY . .
 RUN yarn build && yarn install --pure-lockfile --prod
