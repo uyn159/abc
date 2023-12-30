@@ -16,7 +16,6 @@ build:
   script:
     - docker pull $IMAGE_TAG_BUILDER || echo "Old image not exists, build from scratch"
     - docker image inspect "$IMAGE_TAG_BUILDER" &> /dev/null && container_id=$(docker create "$IMAGE_TAG_BUILDER") && docker cp "$container_id:/app/.next/cache" .next/ && docker rm "$container_id" || echo "Image $IMAGE_TAG_BUILDER does not exist. Doing nothing."
-    - ls -la .next/cache
     - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG_BUILDER --target=builder .
     - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG .
     - docker push $IMAGE_TAG
