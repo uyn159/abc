@@ -1,22 +1,22 @@
-image: docker:24.0.7
+# image: docker:24.0.7
 
-stages:
-  - build
+# stages:
+#   - build
 
-variables:
-  IMAGE_TAG_BUILDER: $CI_REGISTRY_IMAGE/builder:latest
-  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-  DOCKER_BUILDKIT: '1'
+# variables:
+#   IMAGE_TAG_BUILDER: $CI_REGISTRY_IMAGE/builder:latest
+#   IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+#   DOCKER_BUILDKIT: '1'
 
-build:
-  stage: build
-  before_script:
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
-    - mkdir -p .next
-  script:
-    - docker pull $IMAGE_TAG_BUILDER || echo "Old image not exists, build from scratch"
-    - docker image inspect "$IMAGE_TAG_BUILDER" &> /dev/null && container_id=$(docker create "$IMAGE_TAG_BUILDER") && docker cp "$container_id:/app/.next/cache" .next/ && docker rm "$container_id" || echo "Image $IMAGE_TAG_BUILDER does not exist. Doing nothing."
-    - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG_BUILDER --target=builder .
-    - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG .
-    - docker push $IMAGE_TAG
-    - docker push $IMAGE_TAG_BUILDER
+# build:
+#   stage: build
+#   before_script:
+#     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+#     - mkdir -p .next
+#   script:
+#     - docker pull $IMAGE_TAG_BUILDER || echo "Old image not exists, build from scratch"
+#     - docker image inspect "$IMAGE_TAG_BUILDER" &> /dev/null && container_id=$(docker create "$IMAGE_TAG_BUILDER") && docker cp "$container_id:/app/.next/cache" .next/ && docker rm "$container_id" || echo "Image $IMAGE_TAG_BUILDER does not exist. Doing nothing."
+#     - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG_BUILDER --target=builder .
+#     - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG .
+#     - docker push $IMAGE_TAG
+#     - docker push $IMAGE_TAG_BUILDER
