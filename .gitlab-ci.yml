@@ -20,3 +20,15 @@
 #     - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_TAG_BUILDER -t $IMAGE_TAG .
 #     - docker push $IMAGE_TAG
 #     - docker push $IMAGE_TAG_BUILDER
+stages:
+  - build
+build:
+    stage: build
+    before_script:
+      - docker login -u $USER_NAME -p $PASSWORD
+    script:
+        - docker pull $IMAGE_BUILDER || echo "done"
+        - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_BUILDER -t $IMAGE_BUILDER .
+        - docker push $IMAGE_BUILDER
+    only:
+        - main
