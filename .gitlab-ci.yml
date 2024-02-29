@@ -24,17 +24,17 @@ stages:
   - build
   - run
 build:
-    stage: build
-    tags:
-      - mylab
-    before_script:
-      - docker login -u $USER_NAME -p $PASSWORD
-    script:
-        - docker pull $IMAGE_BUILDER || echo "done"
-        - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_BUILDER -t $IMAGE_BUILDER .
-        - docker push $IMAGE_BUILDER
-    only:
-        - main
+  stage: build
+  tags:
+    - mylab
+  before_script:
+    - docker login -u $USER_NAME -p $PASSWORD
+  script:
+      - docker pull $IMAGE_BUILDER || echo "done"
+      - docker build --build-arg BUILDKIT_INLINE_CACHE=1 --cache-from $IMAGE_BUILDER -t $IMAGE_BUILDER .
+      - docker push $IMAGE_BUILDER
+  only:
+      - main
 run:
   stage: run
   tags:
@@ -43,7 +43,7 @@ run:
     - docker stop $IMAGE_BUILDER || true && docker rm $IMAGE_BUILDER || true
   script:
     - docker run -d -p 3000:3000 --name=test --restart always $IMAGE_BUILDER
-  after_script:
-    - docker image prune -a -f
+  only:
+    - main
 
 
