@@ -42,6 +42,6 @@ run:
   before_script:
     - docker stop $IMAGE_BUILDER || true && docker rm $IMAGE_BUILDER || true
   script:
-    - docker run -d -p 3000:3000 --name=$IMAGE_BUILDER $IMAGE_BUILDER --restart always
+    - docker run -d -p 3000:3000 --name=$IMAGE_BUILDER --restart always test
 
 
