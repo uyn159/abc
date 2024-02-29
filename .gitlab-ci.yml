@@ -24,6 +24,8 @@ stages:
   - build
 build:
     stage: build
+    tags:
+      - mylab
     before_script:
       - docker login -u $USER_NAME -p $PASSWORD
     script:
