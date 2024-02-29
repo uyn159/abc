@@ -22,6 +22,7 @@
 #     - docker push $IMAGE_TAG_BUILDER
 stages:
   - build
+  - run
 build:
     stage: build
     tags:
@@ -34,3 +35,13 @@ build:
         - docker push $IMAGE_BUILDER
     only:
         - main
+run:
+  stage: run
+  tags:
+    - mylab
+  before_script:
+    - docker stop $IMAGE_BUILDER || true && docker rm $IMAGE_BUILDER || true
+  script:
+    - docker run -d -p 3000:3000 --name $IMAGE_BUILDER $IMAGE_BUILDER --restart always
+
+
