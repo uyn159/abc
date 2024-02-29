@@ -35,7 +35,7 @@ build:
       - docker push $IMAGE_BUILDER
   only:
       - main
-run:
+deployment:
   stage: run
   tags:
     - mylab
