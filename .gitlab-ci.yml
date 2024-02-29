@@ -43,5 +43,7 @@ run:
     - docker stop $IMAGE_BUILDER || true && docker rm $IMAGE_BUILDER || true
   script:
     - docker run -d -p 3000:3000 --name=test --restart always $IMAGE_BUILDER
+  after_script:
+    - docker image prune -a -f
 
 
