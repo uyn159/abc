@@ -40,9 +40,9 @@ run:
   tags:
     - mylab
   before_script:
-    - docker stop $IMAGE_BUILDER || true && docker rm $IMAGE_BUILDER || true
+    - docker stop $CONTAINER_NAME || true && docker rm $CONTAINER_NAME || true
   script:
-    - docker run -d -p 3000:3000 --name=test --restart always $IMAGE_BUILDER
+    - docker run -d -p 3000:3000 --name=$CONTAINER_NAME --restart always $IMAGE_BUILDER
   only:
     - main
 
